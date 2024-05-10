@@ -1,0 +1,13 @@
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	bva = branch -va
+	last = log -1 HEAD
+	lg = log
+	dot = add .
+	sw = switch
+[user]
+	name = Timothy Willard
+	email = timothywillard22@gmail.com
