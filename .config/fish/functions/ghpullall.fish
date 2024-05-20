@@ -1,6 +1,6 @@
 function ghpullall --description "Pull the latest from the main branch for all git repos cloned from GitHub"
 	set returnto (pwd)
-	for repo in (find ~/Desktop/GitHub -type d -maxdepth 2)
+	for repo in (find -P ~/Desktop/GitHub -type d -maxdepth 2)
 		cd $repo
 		if test -d "$repo/.git"
 			set branchname (git rev-parse --abbrev-ref HEAD)
