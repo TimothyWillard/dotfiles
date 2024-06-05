@@ -16,4 +16,3 @@ alias sfdf="syncfromdotfiles"
 
 alias gti="git"
 alias igt="git"
-
