@@ -8,6 +8,7 @@
 	lg = log
 	dot = add .
 	sw = switch
+	psuh = push
 [user]
 	name = Timothy Willard
 	email = timothywillard22@gmail.com
