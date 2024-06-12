@@ -4,7 +4,8 @@
 	ci = commit
 	st = status
 	bva = branch -va
-	last = log -1 HEAD
+	first = log 1 HEAD
+	head = log -5
 	lg = log
 	dot = add .
 	sw = switch
