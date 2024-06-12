@@ -9,6 +9,7 @@
 	dot = add .
 	sw = switch
 	psuh = push
+	dif = diff
 [user]
 	name = Timothy Willard
 	email = timothywillard22@gmail.com
