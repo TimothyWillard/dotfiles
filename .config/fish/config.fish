@@ -16,3 +16,5 @@ alias sfdf="syncfromdotfiles"
 
 alias gti="git"
 alias igt="git"
+
+alias pyink="$HOME/venvs/pyink_venv/bin/python -m pyink"
