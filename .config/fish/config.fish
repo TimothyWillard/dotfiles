@@ -7,6 +7,7 @@ set -Ux fish_color_command dade73
 set -Ux LSCOLORS gxfxbEaEBxxEhEhBaDaCaD
 
 source $HOME/.cargo/env.fish
+fish_add_path ~/.local/bin
 
 alias lah="ls -lah"
 alias rfish="source ~/.config/fish/**/*.fish"
