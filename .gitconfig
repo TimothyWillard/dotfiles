@@ -15,3 +15,5 @@
 [user]
 	name = Timothy Willard
 	email = timothywillard22@gmail.com
+[diff]
+	algorithm = histogram
