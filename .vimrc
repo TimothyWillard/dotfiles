@@ -6,3 +6,4 @@ set number
 set cursorline
 set cursorcolumn
 set tabstop=2
+set ruler
