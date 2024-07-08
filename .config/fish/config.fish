@@ -2,6 +2,11 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 end
 
+# Need to manually set SDK root for R CMD Check
+if [ (hostname) = "epid-iss-MBP.lan" ]
+    set -Ux SDKROOT (xcrun --show-sdk-path)
+end
+
 set -Ux fish_color_command dade73
 # https://stackoverflow.com/a/25563976
 set -Ux LSCOLORS gxfxbEaEBxxEhEhBaDaCaD
