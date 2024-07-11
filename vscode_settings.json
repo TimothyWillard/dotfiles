@@ -20,6 +20,7 @@
         "FIPS",
         "flepi",
         "fomite",
+        "ftype",
         "gempyor",
         "Herpesviruses",
         "HPAI",
@@ -61,6 +62,7 @@
         "templating",
         "Trypanosomes",
         "UNC",
+        "usefixtures",
         "Vacca",
         "variolation",
         "zombied"
