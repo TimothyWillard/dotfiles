@@ -14,6 +14,12 @@
 	dif = diff
 [user]
 	name = Timothy Willard
-	email = timothywillard22@gmail.com
+	email = 9395586+TimothyWillard@users.noreply.github.com
 [diff]
 	algorithm = histogram
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg
+[includeIf "gitdir:~/"]
+	path = ~/.gitconfig-local
