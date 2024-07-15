@@ -16,7 +16,7 @@ source $HOME/.cargo/env.fish
 fish_add_path ~/.local/bin
 
 alias lah="ls -lah"
-alias rfish="source ~/.config/fish/**/*.fish"
+alias rfish="source ~/.config/fish/**/*.fish; source ~/.config/fish/config.fish"
 
 alias mmdb="movemydockback"
 alias sfdf="syncfromdotfiles"
@@ -25,3 +25,5 @@ alias gti="git"
 alias igt="git"
 
 alias pyink="$HOME/venvs/pyink_venv/bin/python -m pyink"
+
+alias gchrome='open -a "Google Chrome"'
