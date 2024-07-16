@@ -10,7 +10,7 @@ end
 set -Ux fish_color_command dade73
 # https://stackoverflow.com/a/25563976
 set -Ux LSCOLORS gxfxbEaEBxxEhEhBaDaCaD
-set -Ux GPG_TTY (tty)
+set -x GPG_TTY (tty)
 
 source $HOME/.cargo/env.fish
 fish_add_path ~/.local/bin
