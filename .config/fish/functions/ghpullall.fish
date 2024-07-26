@@ -8,14 +8,19 @@ function ghpullall --description "Pull the latest from the main branch for all g
 			echo "> Updating $orgname/$reponame"
 			set branchname (git rev-parse --abbrev-ref HEAD)
 			set mainbranchname (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
-			if [ "$branchname" != "$mainbranchname" ]
+			set workingchanges (git status -s | wc -l | string trim)
+			if [ "$workingchanges" != "0" ]
 				git stash
+			end
+			if [ "$branchname" != "$mainbranchname" ]
 				git switch $mainbranchname
 			end
 			git fetch
 			git pull
 			if [ "$branchname" != "$mainbranchname" ]
 				git switch $branchname
+			end
+			if [ "$workingchanges" != "0" ]
 				git stash apply --quiet
 			end
 		end
