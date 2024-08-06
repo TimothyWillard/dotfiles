@@ -81,5 +81,12 @@
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#8E8D8F"
     },
-    "terminal.integrated.defaultProfile.osx": "fish"
+    "terminal.integrated.profiles.osx": {
+        "fish (login)": {
+            "path": "/opt/homebrew/bin/fish",
+            "args": ["--login"]
+        }
+    },
+    "terminal.integrated.defaultProfile.osx": "fish (login)",
+    "terminal.integrated.shell.osx": "fish"
 }
