@@ -16,6 +16,7 @@ source $HOME/.cargo/env.fish
 fish_add_path ~/.local/bin
 
 alias lah="ls -lah"
+alias lh="ls -lah"
 alias rfish="source ~/.config/fish/**/*.fish; source ~/.config/fish/config.fish"
 
 alias mmdb="movemydockback"
