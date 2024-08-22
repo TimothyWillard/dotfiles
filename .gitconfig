@@ -14,6 +14,8 @@
 	sw = switch
 	psuh = push
 	dif = diff
+	cdiff = diff --check
+	sdiff = diff --staged
 [user]
 	name = Timothy Willard
 	email = 9395586+TimothyWillard@users.noreply.github.com
