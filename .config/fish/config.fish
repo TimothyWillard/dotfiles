@@ -28,3 +28,7 @@ alias igt="git"
 alias pyink="$HOME/venvs/pyink_venv/bin/python -m pyink"
 
 alias gchrome='open -a "Google Chrome"'
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
