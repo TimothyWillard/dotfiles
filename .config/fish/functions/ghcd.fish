@@ -1,4 +1,8 @@
 function ghcd --description "Shorthand for cd-ing to a repo from GitHub to the standardized place" --argument repo
+	if test -z "$repo"
+		echo "No repo name argument was provided."
+		return 1
+	end
 	if string match -q -- "*/*" $repo
 		if test -d "$HOME/Desktop/GitHub/$repo"
 			cd $HOME/Desktop/GitHub/$repo
