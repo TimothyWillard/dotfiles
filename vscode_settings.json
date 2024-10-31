@@ -82,7 +82,7 @@
         "variolation",
         "zombied"
     ],
-    "editor.rulers": [88, 132],
+    "editor.rulers": [88, 92, 132],
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#8E8D8F"
     },
