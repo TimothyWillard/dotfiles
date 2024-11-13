@@ -47,9 +47,15 @@ if test (uname) = "Darwin"
     # MacOS specific aliases
     alias gchrome='open -a "Google Chrome"'
     alias mmdb="movemydockback"
+else if test (uname) = "Linux"
+    # Linux specific aliases
+    if string match --quiet -- 'longleaf-*.unc.edu' (hostnamectl --static)
+        # Longleaf specific aliases
+        alias cdu="cd /users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
+        alias cdw="cd /work/users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
+    end
 end
-if string match --quiet -- 'longleaf-*.unc.edu' (hostnamectl --static)
-    # Longleaf specific aliases
-    alias cdu="cd /users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
-    alias cdw="cd /work/users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
+if type -q brew
+    # Courtesy of @mattmc3, https://github.com/mattmc3/fishconf/blob/main/functions/brew/brewup.fish
+    alias brewup="brew update && brew upgrade && brew cleanup"
 end
