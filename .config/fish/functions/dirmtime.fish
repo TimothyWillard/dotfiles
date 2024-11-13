@@ -2,9 +2,21 @@ function dirmtime --description "Get the max modtime of the files contained in a
     if test -z "$repo"
         set repo '.'
     end
-    find $repo -type f -not -path "./.git/*" \
-        | xargs stat -f %m \
-        | sort -r \
-        | head -1 \
-        | xargs date -r
+    set curuname (uname)
+    if test "$curuname" = "Darwin"
+        find $repo -type f -not -path "./.git/*" \
+            | xargs stat -f %m \
+            | sort -r \
+            | head -1 \
+            | xargs date -r
+    else if test "$curuname" = "Linux"
+        find $repo -type f -not -path "./.git/*" \
+            | xargs stat -c %Y \
+            | sort -r \
+            | head -1 \
+            | xargs date -r
+    else
+        echo "Unsure of how to get the directory modtime on $curuname"
+        return 1
+    end
 end
