@@ -42,6 +42,7 @@ alias rfish="source ~/.config/fish/**/*.fish; source ~/.config/fish/config.fish"
 alias sfdf="syncfromdotfiles"
 alias gti="git"
 alias igt="git"
+alias rsyncsansgit="rsync --recursive --checksum --verbose --times --exclude=.git"
 if test (uname) = "Darwin"
     # MacOS specific aliases
     alias gchrome='open -a "Google Chrome"'
