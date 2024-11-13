@@ -51,5 +51,5 @@ end
 if string match --quiet -- 'longleaf-*.unc.edu' (hostnamectl --static)
     # Longleaf specific aliases
     alias cdu="cd /users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
-    alias cdu="cd /work/users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
+    alias cdw="cd /work/users/"(string sub -s 1 -l 1 $USER)"/"(string sub -s 2 -l 1 $USER)"/$USER/"
 end
