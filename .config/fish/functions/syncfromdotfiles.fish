@@ -17,7 +17,11 @@ function syncfromdotfiles --description "Sync files from GitHub dotfiles"
 	else if string match --quiet -- 'longleaf-*.unc.edu' (hostnamectl --static)
 		set gitconfiglocal '.gitconfig-longleaf'
 	end
-	rsyncsansgit $DOTFILES/$gitconfiglocal $HOME/.gitconfig-local
+	if set -q $gitconfiglocal
+		rsyncsansgit $DOTFILES/$gitconfiglocal $HOME/.gitconfig-local
+	else
+		echo "Unable to find a local gitconfig to sync"
+	end
 	if test -d "$HOME/Library/Application Support/Code/User"
 		rsyncsansgit $DOTFILES/vscode_settings.json $HOME/Library/Application\ Support/Code/User/settings.json
 	end
