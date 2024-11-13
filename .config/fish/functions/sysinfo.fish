@@ -6,6 +6,9 @@ function sysinfo --description "Get system info for bug reporting. Use -1 to get
     if which sw_vers > /dev/null
         set OS_VERSION ( sw_vers | awk 'NR==2 {print $2}' )
         set OUTPUT_STRING "$OUTPUT_STRING\nMacOS $OS_VERSION"
+    else if which lsb_release > /dev/null
+        set OS_VERSION ( lsb_release -d | string sub --start 13 | xargs )
+        set OUTPUT_STRING "$OUTPUT\n$OS_VERSION"
     else
         echo "Unknown and unspported OS."
         return 1

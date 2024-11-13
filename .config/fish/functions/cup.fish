@@ -1,4 +1,10 @@
 function cup --description "Conda up, either add conda to the path or remove it if already there."
+    # Exit early if not MacOS
+    if test (uname) != "Darwin"
+        echo "The \`cup\` function is only intended for use on MacOS."
+        return 1
+    end
+
     # Check if anaconda is on the system
     if not test -d $HOME/anaconda3
         echo "Anaconda not found at $HOME/anaconda3."

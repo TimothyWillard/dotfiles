@@ -1,6 +1,10 @@
 function ghpullall --description "Pull the latest from the main branch for all git repos cloned from GitHub"
+	if not test -d "$HOME/Desktop/GitHub"
+		echo "The '$HOME/Desktop/GitHub' directory does not exist."
+		return 1
+	end
 	set returnto (pwd)
-	for repo in (find -P ~/Desktop/GitHub -type d -maxdepth 2)
+	for repo in (find -P $HOME/Desktop/GitHub -type d -maxdepth 2)
 		cd $repo
 		if test -d "$repo/.git"
 			set reponame (basename $repo)
