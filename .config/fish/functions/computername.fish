@@ -1,8 +1,9 @@
 function computername --description "Get the name of a computer"
     set osname (uname)
     if [ "$osname" = "Darwin" ]
-        # scutil --get LocalHostName
         set cptrname (scutil --get ComputerName)
+    else if [ "$osname" = "Linux" ]
+        set cptrname (hostnamectl --static)
     else
         echo "Unknown and unspported OS."
         return 1
