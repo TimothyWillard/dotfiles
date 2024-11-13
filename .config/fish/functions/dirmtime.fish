@@ -10,11 +10,8 @@ function dirmtime --description "Get the max modtime of the files contained in a
             | head -1 \
             | xargs date -r
     else if test "$curuname" = "Linux"
-        find $repo -type f -not -path "./.git/*" \
-            | xargs stat -c %Y \
-            | sort -r \
-            | head -1 \
-            | xargs date -r
+        set ts (find $repo -type f -not -path "./.git/*" | xargs stat -c %Y | sort -r | head -1)
+				eval "date -d @$ts"
     else
         echo "Unsure of how to get the directory modtime on $curuname"
         return 1
