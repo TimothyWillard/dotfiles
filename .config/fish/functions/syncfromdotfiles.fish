@@ -14,6 +14,8 @@ function syncfromdotfiles --description "Sync files from GitHub dotfiles"
 		set gitconfiglocal '.gitconfig-work'
 	else if string match --quiet -- 'Timothys-*' (hostname)
 		set gitconfiglocal '.gitconfig-home'
+	else if string match --quiet -- 'longleaf-*.unc.edu' (hostnamectl --static)
+		set gitconfiglocal '.gitconfig-longleaf'
 	end
 	rsyncsansgit $DOTFILES/$gitconfiglocal $HOME/.gitconfig-local
 	if test -d "$HOME/Library/Application Support/Code/User"
