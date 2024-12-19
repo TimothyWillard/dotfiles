@@ -10,13 +10,19 @@ function syncfromdotfiles --description "Sync files from GitHub dotfiles"
 	end
 	# Place
 	rsyncsansgit --exclude=vscode_settings.json --exclude=".gitconfig-*" $DOTFILES/ $HOME/
-	if string match --quiet -- 'epid-iss-*' (hostname)
-		set gitconfiglocal '.gitconfig-work'
-	else if string match --quiet -- 'Timothys-*' (hostname)
-		set gitconfiglocal '.gitconfig-home'
-	else if string match --quiet -- 'longleaf-*.unc.edu' (hostnamectl --static)
-		set gitconfiglocal '.gitconfig-longleaf'
-	end
+	if [ "$osname" = "Darwin" ]
+        set cptrname (scutil --get ComputerName)
+		if string match --quiet -- 'epid_id*MacBook Pro' $cptrname
+			set gitconfiglocal '.gitconfig-work'
+		else if string match --quiet -- 'Timothys-*' $cptrname
+			set gitconfiglocal '.gitconfig-home'
+		end
+    else if [ "$osname" = "Linux" ]
+        set cptrname (hostnamectl --static)
+		if string match --quiet -- 'longleaf-*.unc.edu' $cptrname
+			set gitconfiglocal '.gitconfig-longleaf'
+		end
+    end
 	if set -q $gitconfiglocal
 		rsyncsansgit $DOTFILES/$gitconfiglocal $HOME/.gitconfig-local
 	else
