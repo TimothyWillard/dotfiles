@@ -35,6 +35,11 @@ if test -d "$HOME/.bun"
     set --export PATH $BUN_INSTALL/bin $PATH
 end
 
+# RVM
+if test -d "$HOME/.rvm"
+    fish_add_path $HOME/.rvm/bin
+end
+
 # Aliases
 alias lah="ls -lah"
 alias lh="ls -lah"
