@@ -32,6 +32,16 @@ function sysinfo --description "Get system info for bug reporting. Use -1 to get
         set OUTPUT_STRING "$OUTPUT_STRING\nConda $CONDA_VERSION"
     end
 
+    # Get git info
+    if contains -- --git $argv; and which git > /dev/null; and git rev-parse --is-inside-work-tree > /dev/null 2>&1
+        set GIT_VERSION ( git --version | awk '{print $3}' )
+        set OUTPUT_STRING "$OUTPUT_STRING\nGit $GIT_VERSION"
+        set GIT_BRANCH ( git rev-parse --abbrev-ref HEAD )
+        set OUTPUT_STRING "$OUTPUT_STRING\nBranch $GIT_BRANCH"
+        set GIT_COMMIT ( git rev-parse HEAD )
+        set OUTPUT_STRING "$OUTPUT_STRING\nCommit $GIT_COMMIT"
+    end
+
     # Output
     set OUTPUT_STRING ( string trim --chars="\n" "$OUTPUT_STRING" )
     if contains -- -1 $argv
