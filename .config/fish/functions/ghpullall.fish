@@ -8,6 +8,9 @@ function ghpullall --description "Pull the latest from the main branch for all g
 		cd $repo
 		set reponame (basename $repo)
 		set orgname (basename (dirname $repo))
+		if string match -q '.*' -- $reponame; or string match -q '.*' -- $orgname
+			continue
+		end
 		if test -d "$repo/.git"
 			echo "> Updating Git Repo $orgname/$reponame"
 			set branchname (git rev-parse --abbrev-ref HEAD)
