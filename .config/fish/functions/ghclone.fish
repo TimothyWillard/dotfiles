@@ -4,5 +4,11 @@ function ghclone --description "Shorthand for cloning a repo from GitHub to the 
 		return 1
 	end
 	mkdir -vp $HOME/Desktop/GitHub/$repo
-	git clone git@github.com:$repo.git ~/Desktop/GitHub/$repo
+	if contains -- --worktree $argv; or contains -- -w $argv
+		# https://infrequently.org/2021/07/worktrees-step-by-step/
+		git clone --verbose --bare git@github.com:$repo.git ~/Desktop/GitHub/$repo/.bare
+		echo "gitdir: ./.bare" > ~/Desktop/GitHub/$repo/.git
+	else
+		git clone --verbose git@github.com:$repo.git ~/Desktop/GitHub/$repo
+	end
 end

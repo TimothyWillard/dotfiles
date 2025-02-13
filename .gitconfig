@@ -16,6 +16,7 @@
 	dif = diff
 	cdiff = diff --check
 	sdiff = diff --staged
+	wt = worktree
 [user]
 	name = Timothy Willard
 	email = 9395586+TimothyWillard@users.noreply.github.com

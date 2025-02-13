@@ -6,10 +6,10 @@ function ghpullall --description "Pull the latest from the main branch for all g
 	set returnto (pwd)
 	for repo in (find -P $HOME/Desktop/GitHub -type d -maxdepth 2)
 		cd $repo
+		set reponame (basename $repo)
+		set orgname (basename (dirname $repo))
 		if test -d "$repo/.git"
-			set reponame (basename $repo)
-			set orgname (basename (dirname $repo))
-			echo "> Updating $orgname/$reponame"
+			echo "> Updating Git Repo $orgname/$reponame"
 			set branchname (git rev-parse --abbrev-ref HEAD)
 			set mainbranchname (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
 			set workingchanges (git status -s | wc -l | string trim)
@@ -27,6 +27,11 @@ function ghpullall --description "Pull the latest from the main branch for all g
 			if [ "$workingchanges" != "0" ]
 				git stash apply --quiet
 			end
+		else if test -d "$repo/.bare"
+			echo "> Fetching Git Worktree $reponame"
+			git fetch --all
+		else
+			echo "Skipping $repo"
 		end
 	end
 	cd $returnto
