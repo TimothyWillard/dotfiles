@@ -4,7 +4,6 @@ function cup --description "Conda up, either add conda to the path or remove it 
         echo "The \`cup\` function is only intended for use on MacOS."
         return 1
     end
-
     # Check if anaconda is on the system
     if not test -d $HOME/anaconda3
         echo "Anaconda not found at $HOME/anaconda3."
@@ -23,4 +22,6 @@ function cup --description "Conda up, either add conda to the path or remove it 
         source $HOME/anaconda3/etc/fish/conf.d/conda.fish
         fish_add_path --path --prepend $HOME/anaconda3/bin
     end
+    conda config --set auto_activate_base false
+    conda config --set changeps1 false
 end

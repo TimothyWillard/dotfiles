@@ -40,6 +40,9 @@ if test -d "$HOME/.rvm"
     fish_add_path $HOME/.rvm/bin
 end
 
+# Disable venv prompt
+set -x VIRTUAL_ENV_DISABLE_PROMPT 1
+
 # Aliases
 alias lah="ls -lah"
 alias lh="ls -lah"
