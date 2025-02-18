@@ -16,7 +16,7 @@ function fish_prompt
         end
     end
     # Who am I and where am I
-    if not string match -q -- "epid-iss*" (prompt_hostname)
+    if not string match -r -q -- "^(epid-iss.*|MacBookPro)\$" (prompt_hostname)
         set_color green
         echo -n (whoami)
         set_color yellow
