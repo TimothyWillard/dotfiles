@@ -70,6 +70,7 @@
         "rowsets",
         "sbatch",
         "SEIR",
+        "seff",
         "skipna",
         "Slurm",
         "stackoverflow",
