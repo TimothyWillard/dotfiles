@@ -6,8 +6,7 @@
 	ci = commit
 	st = status
 	bva = branch -va
-	last = log -1			
-	first = log -1
+	last = log -1
 	head = log -5
 	lg = log
 	dot = add .
@@ -17,9 +16,12 @@
 	cdiff = diff --check
 	sdiff = diff --staged
 	wt = worktree
+	out = log --oneline @{u}..
 [user]
 	name = Timothy Willard
 	email = 9395586+TimothyWillard@users.noreply.github.com
+[pull]
+	ff = only
 [diff]
 	algorithm = histogram
 [commit]
