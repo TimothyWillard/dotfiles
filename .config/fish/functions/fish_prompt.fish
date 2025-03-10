@@ -30,8 +30,13 @@ function fish_prompt
     # Git branch
     if which git > /dev/null 2>&1
         if git rev-parse --is-inside-work-tree > /dev/null 2>&1
+            set branchname (git branch --show-current)
             set_color yellow
-            echo -n '('(git symbolic-ref --short HEAD)') '
+            if test -n "$branchname"
+                echo -n '('(git symbolic-ref --short HEAD)') '
+            else
+                echo -n '(detached@'(git rev-parse --short HEAD)') '
+            end
             set_color normal
         end
     end
