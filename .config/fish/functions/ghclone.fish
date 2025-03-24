@@ -8,6 +8,7 @@ function ghclone --description "Shorthand for cloning a repo from GitHub to the 
 		# https://infrequently.org/2021/07/worktrees-step-by-step/
 		git clone --verbose --bare git@github.com:$repo.git ~/Desktop/GitHub/$repo/.bare
 		echo "gitdir: ./.bare" > ~/Desktop/GitHub/$repo/.git
+		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 	else
 		git clone --verbose git@github.com:$repo.git ~/Desktop/GitHub/$repo
 	end
