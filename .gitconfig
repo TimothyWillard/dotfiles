@@ -17,6 +17,7 @@
 	sdiff = diff --staged
 	wt = worktree
 	out = log --oneline @{u}..
+	rb = rebase
 [user]
 	name = Timothy Willard
 	email = 9395586+TimothyWillard@users.noreply.github.com
