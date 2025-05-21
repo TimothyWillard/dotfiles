@@ -1,23 +1,28 @@
 [alias]
+	# Shorthand/SVN
 	a = add
+	br = branch
+	bva = branch -va
+	ci = commit
 	co = checkout
 	cob = checkout -b
-	br = branch
-	ci = commit
-	st = status
-	bva = branch -va
-	last = log -1
-	head = log -5
-	lg = log
 	dot = add .
+	lg = log
+	rb = rebase
+	st = status
 	sw = switch
+	wt = worktree
+	# Log related
+	head = log -5
+	last = log -1
+	logo = log --oneline
+	out = log --oneline @{u}..
+	# Typos
 	psuh = push
 	dif = diff
+	# Diff related
 	cdiff = diff --check
 	sdiff = diff --staged
-	wt = worktree
-	out = log --oneline @{u}..
-	rb = rebase
 [user]
 	name = Timothy Willard
 	email = 9395586+TimothyWillard@users.noreply.github.com
