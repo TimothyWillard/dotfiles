@@ -4,13 +4,10 @@ function ghpullall --description "Pull the latest from the main branch for all g
 		return 1
 	end
 	set returnto (pwd)
-	for repo in (find -P $HOME/Desktop/GitHub -type d -maxdepth 2)
+	for repo in (find -P $HOME/Desktop/GitHub -type d -mindepth 2 -maxdepth 2 ! -path '*/.*')
 		cd $repo
 		set reponame (basename $repo)
 		set orgname (basename (dirname $repo))
-		if string match -q '.*' -- $reponame; or string match -q '.*' -- $orgname
-			continue
-		end
 		if test -d "$repo/.git"
 			echo "> Updating Git Repo $orgname/$reponame"
 			set branchname (git rev-parse --abbrev-ref HEAD)
