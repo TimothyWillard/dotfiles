@@ -110,5 +110,14 @@
         }
     },
     "terminal.integrated.defaultProfile.osx": "fish (login)",
-    "terminal.integrated.shell.osx": "fish"
+    "terminal.integrated.shell.osx": "fish",
+    "[restructuredtext]": {
+        "editor.wordWrap": "on"
+    },
+    "[plaintext]": {
+        "editor.wordWrap": "on"
+    },
+    "[markdown]": {
+        "editor.wordWrap": "on"
+    }
 }
