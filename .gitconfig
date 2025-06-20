@@ -11,6 +11,7 @@
 	rb = rebase
 	st = status
 	sw = switch
+	swc = switch -c
 	wt = worktree
 	# Log related
 	head = log -5
