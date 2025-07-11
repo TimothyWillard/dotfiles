@@ -8,7 +8,10 @@ function ghpullall --description "Pull the latest from the main branch for all g
 		cd $repo
 		set reponame (basename $repo)
 		set orgname (basename (dirname $repo))
-		if test -d "$repo/.git"
+		if test -d "$repo/.jj"
+			echo "> Updating Jujutsu Repo $orgname/$reponame"
+			jj git fetch
+		else if test -d "$repo/.git"
 			echo "> Updating Git Repo $orgname/$reponame"
 			set branchname (git rev-parse --abbrev-ref HEAD)
 			set mainbranchname (git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@')
