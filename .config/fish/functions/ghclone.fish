@@ -12,6 +12,6 @@ function ghclone --description "Shorthand for cloning a repo from GitHub to the 
 		echo "gitdir: ./.bare" > ~/Desktop/GitHub/$repo/.git
 		git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 	else
-		jj git clone --verbose git@github.com:$repo.git ~/Desktop/GitHub/$repo
+		jj git clone git@github.com:$repo.git ~/Desktop/GitHub/$repo
 	end
 end

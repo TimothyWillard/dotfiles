@@ -8,4 +8,4 @@ set cursorcolumn
 set tabstop=2
 set ruler
 set colorcolumn=51,73
-highlight ColorColumn ctermbg=lightblue guibg=lightblue
+highlight ColorColumn ctermbg=darkblue guibg=darkblue
