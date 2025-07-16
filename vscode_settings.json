@@ -98,6 +98,9 @@
         92,
         132
     ],
+    "files.exclude": {
+        "**/.jj/": true
+    },
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#8E8D8F"
     },
