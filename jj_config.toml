@@ -1,5 +1,8 @@
 "$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
 
+[aliases]
+head = ["log", "--revisions", "ancestors(@, 5) | @::"]
+
 [user]
 name = "Timothy Willard"
 email = "9395586+TimothyWillard@users.noreply.github.com"
