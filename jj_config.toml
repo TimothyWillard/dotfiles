@@ -12,5 +12,5 @@ editor = "vim"
 
 [signing]
 behavior = "own"
-backend = "gpg"
-key = ""
+backend = "ssh"
+key = "~/.ssh/id_ed25519_git_signed_commits.pub"

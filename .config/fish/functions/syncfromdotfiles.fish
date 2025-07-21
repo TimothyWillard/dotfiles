@@ -16,38 +16,10 @@ function syncfromdotfiles --description "Sync files from GitHub dotfiles"
 		echo "> Syncing jj config"
 		set jjconfigpath (jj config path --user)
 		rsyncsansgit $DOTFILES/jj_config.toml $jjconfigpath
-		if [ "$osname" = "Darwin" ]
-			set cptrname (scutil --get ComputerName)
-			if string match --quiet -- 'epid*' $cptrname
-				gsed -i 's/key = ""/key = "871B573E01D0FB85"/' $jjconfigpath
-			else if string match --quiet -- 'Timothy*' $cptrname
-				gsed -i 's/key = ""/key = "D9EEB52CF5D0CC09"/' $jjconfigpath
-			end
-		else if [ "$osname" = "Linux" ]
-			set cptrname (hostnamectl --static)
-			if string match --quiet -- 'longleaf-*.unc.edu' $cptrname
-				sed -i 's/key = ""/key = "EB5E2D91340E42B5"/' $jjconfigpath
-			end
-		end
 	end
 	echo "> Syncing git config"
-	if [ "$osname" = "Darwin" ]
-        set cptrname (scutil --get ComputerName)
-		if string match --quiet -- 'epid*' $cptrname
-			set gitconfiglocal '.gitconfig-work'
-		else if string match --quiet -- 'Timothy*' $cptrname
-			set gitconfiglocal '.gitconfig-home'
-		end
-    else if [ "$osname" = "Linux" ]
-        set cptrname (hostnamectl --static)
-		if string match --quiet -- 'longleaf-*.unc.edu' $cptrname
-			set gitconfiglocal '.gitconfig-longleaf'
-		end
-    end
-	if set -q $gitconfiglocal
-		rsyncsansgit $DOTFILES/$gitconfiglocal $HOME/.gitconfig-local
-	else
-		echo "Unable to find a local gitconfig to sync"
+	if test -f "$HOME/.gitconfig-local"
+		rm $HOME/.gitconfig-local
 	end
 	rsyncsansgit $DOTFILES/.gitconfig $HOME/.gitconfig
 	if test -d "$HOME/Library/Application Support/Code/User"

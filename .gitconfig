@@ -27,6 +27,7 @@
 [user]
 	name = Timothy Willard
 	email = 9395586+TimothyWillard@users.noreply.github.com
+	signingkey = ~/.ssh/id_ed25519_git_signed_commits.pub
 [pull]
 	ff = only
 [diff]
@@ -35,5 +36,4 @@
 	gpgsign = true
 [gpg]
 	program = gpg
-[includeIf "gitdir:~/"]
-	path = ~/.gitconfig-local
+	format = ssh
