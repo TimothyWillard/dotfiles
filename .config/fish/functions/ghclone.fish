@@ -3,6 +3,9 @@ function ghclone --description "Shorthand for cloning a repo from GitHub to the 
 		echo "The '$HOME/Desktop/GitHub' directory does not exist."
 		return 1
 	end
+	if not string match -q -- "*/*" $repo
+		set repo "TimothyWillard/$repo"
+	end
 	mkdir -vp $HOME/Desktop/GitHub/$repo
 	if contains -- --git $argv; or contains -- -g $argv
 		git clone --verbose git@github.com:$repo.git ~/Desktop/GitHub/$repo
