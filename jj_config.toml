@@ -2,6 +2,7 @@
 
 [aliases]
 head = ["log", "--revisions", "ancestors(@, 5) | @::"]
+rb = ["rebase"]
 
 [user]
 name = "Timothy Willard"
