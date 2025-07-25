@@ -8,6 +8,11 @@ function jj_fish_prompt
             set empty (jj log --ignore-working-copy --no-graph -r @ -T 'empty')
             set description (jj log --ignore-working-copy --no-graph -r @ -T 'description.first_line()')
             if test -n "$description"
+                set description_length (string length -- $description)
+                if test "$description_length" -gt 50
+                    set description (string sub --length 47 -- $description)
+                    set description "$description..."
+                end
                 echo -n $description
             else if "$empty" = "true"
                 set_color --italics 60FA67

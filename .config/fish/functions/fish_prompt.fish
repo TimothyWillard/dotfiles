@@ -41,21 +41,21 @@ function fish_prompt
     set_color green
     echo -n (prompt_pwd)' '
     set_color normal
-    # Git branch
-    if which git > /dev/null 2>&1
-        if git rev-parse --is-inside-work-tree > /dev/null 2>&1
-            set branchname (git branch --show-current)
-            set_color yellow
-            if test -n "$branchname"
-                echo -n '('(git symbolic-ref --short HEAD)') '
-            else
-                echo -n '(detached@'(git rev-parse --short HEAD)') '
-            end
-            set_color normal
+    # Display the current branch or repository info
+    if which jj > /dev/null 2>&1; and jj root --quiet > /dev/null 2>&1
+        # jj repository info
+        jj_fish_prompt
+    else if which git > /dev/null 2>&1; and git rev-parse --is-inside-work-tree > /dev/null 2>&1
+        # git repository info
+        set branchname (git branch --show-current)
+        set_color yellow
+        if test -n "$branchname"
+            echo -n '('(git symbolic-ref --short HEAD)') '
+        else
+            echo -n '(detached@'(git rev-parse --short HEAD)') '
         end
+        set_color normal
     end
-    # JJ revset
-    jj_fish_prompt
     # Display last status
     if test $last_status -ne 0
         set_color red
