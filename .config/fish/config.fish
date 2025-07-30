@@ -51,6 +51,7 @@ alias sfdf="syncfromdotfiles"
 alias gti="git"
 alias igt="git"
 alias rsyncsansgit="rsync --recursive --checksum --verbose --times --exclude={.git,.jj}"
+alias a="activate"
 if test (uname) = "Darwin"
     # MacOS specific aliases
     alias gchrome='open -a "Google Chrome"'
