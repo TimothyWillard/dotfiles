@@ -9,7 +9,7 @@ function activate --description "Activate Python virtual environment from .venv 
         echo "Activated virtual environment from venv"
         return 0
     end
-    if command -v conda >/dev/null 2>&1; and test -d "venv/conda-meta"
+    if command -v conda > /dev/null 2>&1; and test -d "venv/conda-meta"
         conda activate venv/
         echo "Activated conda environment from venv"
         return 0
