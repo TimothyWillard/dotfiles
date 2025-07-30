@@ -1,8 +1,22 @@
 "$schema" = "https://jj-vcs.github.io/jj/latest/config-schema.json"
 
 [aliases]
-head = ["log", "--revisions", "ancestors(@, 5) | @::"]
-rb = ["rebase"]
+head = [
+    "log",
+    "--revisions",
+    "ancestors(@, 5) | @::",
+]
+n = [
+    "edit",
+    "@+",
+]
+p = [
+    "edit",
+    "@-",
+]
+rb = [
+    "rebase",
+]
 
 [user]
 name = "Timothy Willard"
