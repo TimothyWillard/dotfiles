@@ -56,7 +56,8 @@ if test (uname) = "Darwin"
     # MacOS specific aliases
     alias gchrome='open -a "Google Chrome"'
     alias mmdb="movemydockback"
-    # Replace sed with gsed if installed
+    alias o="open ."
+	# Replace sed with gsed if installed
     if which gsed > /dev/null 2>&1
         alias sed="gsed"
     end
