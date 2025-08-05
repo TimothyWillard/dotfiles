@@ -5,7 +5,7 @@ function computername --description "Get the name of a computer"
     else if [ "$osname" = "Linux" ]
         set cptrname (hostnamectl --static)
     else
-        echo "Unknown and unspported OS."
+        echo "Unknown and unsupported OS."
         return 1
     end
     echo "$cptrname"
