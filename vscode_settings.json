@@ -122,5 +122,11 @@
     },
     "[markdown]": {
         "editor.wordWrap": "on"
+    },
+    "[typescript]": {
+        "editor.tabSize": 2
+    },
+    "[javascript]": {
+        "editor.tabSize": 2
     }
 }
