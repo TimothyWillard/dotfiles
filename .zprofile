@@ -1,5 +1,5 @@
-if `uname` = "Darwin"; then
-    eval "$(/usr/local/bin/brew shellenv)"
+if [ "$(uname)" = "Darwin" ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # Need to manually set SDK root for R CMD Check
