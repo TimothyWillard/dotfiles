@@ -41,36 +41,78 @@ function jj_fish_prompt
             end
             set last_bookmark_changeid (jj log --ignore-working-copy --no-graph -r 'heads(::@ & bookmarks())' -T 'change_id.shortest()')
             set next_bookmark_changeid (jj log --ignore-working-copy --no-graph -r 'heads(@:: & bookmarks())' -T 'change_id.shortest()')
-            set bookmark_name ""
+            set bookmark_changeid ""
+            set bookmark_color CA30C7
+            set bookmark_arrow ""
             if test -n "$last_bookmark_changeid"; and test -n "$next_bookmark_changeid"; and test "$last_bookmark_changeid" = "$next_bookmark_changeid"
-                echo -n ', '
-                set_color FF77FF
-                set bookmark_name (jj bookmark list -r "$next_bookmark_changeid" -T 'name')
+                set bookmark_changeid $next_bookmark_changeid
+                set bookmark_color FF77FF
             else if test -n "$next_bookmark_changeid"
-                echo -n ', '
-                set_color CA30C7
-                set bookmark_name (jj bookmark list -r "$next_bookmark_changeid" -T 'name')
+                set bookmark_changeid $next_bookmark_changeid
             else if test -n "$last_bookmark_changeid"
-                echo -n ', '
-                set_color CA30C7
-                set bookmark_name (jj bookmark list -r "$last_bookmark_changeid" -T 'name')
+                set bookmark_changeid $last_bookmark_changeid
             end
+            if test -n "$bookmark_changeid"; and test -n "$changeid"
+                if test "$bookmark_changeid" = "$changeid"
+                    set bookmark_arrow ""
+                else if test -n "$next_bookmark_changeid"; and test "$bookmark_changeid" = "$next_bookmark_changeid"
+                    set bookmark_arrow (printf '\u2B06 ') # up
+                else if test -n "$last_bookmark_changeid"; and test "$bookmark_changeid" = "$last_bookmark_changeid"
+                    set bookmark_arrow (printf '\u2B07 ') # down
+                end
+            end
+            set bookmark_name ""
+            set bookmark_unsynced 0
+            if test -n "$bookmark_changeid"
+                set bookmark_output (jj bookmark list --all-remotes -r "$bookmark_changeid" --color=never | string collect)
+                set local_candidates
+                set remote_git_candidates
+                set remote_other_candidates
+                if test -n "$bookmark_output"
+                    for bookmark_line in (string split -n -- "\n" $bookmark_output)
+                        set trimmed_line (string trim -- $bookmark_line)
+                        if test -z "$trimmed_line"
+                            continue
+                        end
+                        if string match -qr '^\S' $bookmark_line
+                            set candidate (string replace -r ':.*$' '' $trimmed_line)
+                            if string match -q '*@*' $candidate
+                                if string match -q '*@git'
+                                    set remote_git_candidates $remote_git_candidates $candidate
+                                else
+                                    set remote_other_candidates $remote_other_candidates $candidate
+                                end
+                            else
+                                set local_candidates $local_candidates $candidate
+                            end
+                        end
+                        set lowercase_line (string lower $trimmed_line)
+                        if string match -qr 'ahead by|behind by' $lowercase_line
+                            set bookmark_unsynced 1
+                        end
+                    end
+                end
+                if test -n "$local_candidates"
+                    set bookmark_name $local_candidates[1]
+                else if test -n "$remote_git_candidates"
+                    set bookmark_name $remote_git_candidates[1]
+                else if test -n "$remote_other_candidates"
+                    set bookmark_name $remote_other_candidates[1]
+                end
+            end
+            echo -n ', '
             if test -n "$bookmark_name"
-                # This treatment of bookmark names is a bit of a hack. Basically, if the
-                # bookmark name is a repeated string we assume that there are local
-                # changes. This is because `jj bookmark list` will distinguish between
-                # local and remote bookmarks, but repeat the name with the template 
-                # above. This is not a perfect solution, but it works for my use case.
-                set bookmark_name_base (string match -rg '^(.+)\1$' "$bookmark_name")
-                if test -n "$bookmark_name_base"
-                    echo -n $bookmark_name_base
+                set_color $bookmark_color
+                if test -n "$bookmark_arrow"
+                    echo -n $bookmark_arrow
+                end
+                echo -n $bookmark_name
+                if test "$bookmark_unsynced" -eq 1
                     echo -n '*'
-                else
-                    echo -n $bookmark_name
                 end
             else
                 set_color --italics yellow
-                echo -n ', no bookmark'
+                echo -n 'no bookmark'
                 set_color normal
             end
             set_color yellow
