@@ -39,27 +39,34 @@ function jj_fish_prompt
                 echo -n $commitid
                 set_color yellow
             end
-            set last_bookmark_changeid (jj log --ignore-working-copy --no-graph -r 'heads(::@ & bookmarks())' -T 'change_id.shortest()')
-            set next_bookmark_changeid (jj log --ignore-working-copy --no-graph -r 'heads(@:: & bookmarks())' -T 'change_id.shortest()')
+            set current_bookmark_changeids (jj log --ignore-working-copy --no-graph -r '@ & bookmarks()' -T 'change_id.shortest()')
+            set next_bookmark_changeids (jj log --ignore-working-copy --no-graph -r 'heads(@:: & bookmarks())' -T 'change_id.shortest()')
+            set last_bookmark_changeids (jj log --ignore-working-copy --no-graph -r 'heads(::@ & bookmarks())' -T 'change_id.shortest()')
+            set current_bookmark_count (count $current_bookmark_changeids)
+            set next_bookmark_count (count $next_bookmark_changeids)
+            set last_bookmark_count (count $last_bookmark_changeids)
             set bookmark_changeid ""
+            set bookmark_relation ""
             set bookmark_color CA30C7
             set bookmark_arrow ""
-            if test -n "$last_bookmark_changeid"; and test -n "$next_bookmark_changeid"; and test "$last_bookmark_changeid" = "$next_bookmark_changeid"
-                set bookmark_changeid $next_bookmark_changeid
+            if test "$current_bookmark_count" -gt 0
+                set bookmark_changeid $current_bookmark_changeids[1]
+                set bookmark_relation current
                 set bookmark_color FF77FF
-            else if test -n "$next_bookmark_changeid"
-                set bookmark_changeid $next_bookmark_changeid
-            else if test -n "$last_bookmark_changeid"
-                set bookmark_changeid $last_bookmark_changeid
+            else if test "$next_bookmark_count" -eq 1
+                set bookmark_changeid $next_bookmark_changeids[1]
+                set bookmark_relation ahead
+            else if test "$last_bookmark_count" -gt 0
+                set bookmark_changeid $last_bookmark_changeids[1]
+                set bookmark_relation behind
             end
-            if test -n "$bookmark_changeid"; and test -n "$changeid"
-                if test "$bookmark_changeid" = "$changeid"
-                    set bookmark_arrow ""
-                else if test -n "$next_bookmark_changeid"; and test "$bookmark_changeid" = "$next_bookmark_changeid"
+            switch "$bookmark_relation"
+                case ahead
                     set bookmark_arrow (printf '\u2B06 ') # up
-                else if test -n "$last_bookmark_changeid"; and test "$bookmark_changeid" = "$last_bookmark_changeid"
+                case behind
                     set bookmark_arrow (printf '\u2B07 ') # down
-                end
+                case '*'
+                    set bookmark_arrow ""
             end
             set bookmark_name ""
             set bookmark_unsynced 0
