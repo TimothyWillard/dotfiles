@@ -17,6 +17,28 @@ p = [
 rb = [
     "rebase",
 ]
+s = [
+    "status",
+]
+bl = [
+    "bookmark",
+    "list",
+]
+bla = [
+    "bookmark",
+    "list",
+    "--all",
+]
+d = [
+    "show",
+    "--no-patch",
+    "--template",
+    "description",
+]
+gf = [
+    "git",
+    "fetch",
+]
 
 [user]
 name = "Timothy Willard"
