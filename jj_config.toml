@@ -39,6 +39,20 @@ gf = [
     "git",
     "fetch",
 ]
+sync = [
+    "util",
+    "exec",
+    "--",
+    "sh",
+    "-c",
+'''
+jj git fetch
+if [ -z "$(jj log --ignore-working-copy --no-graph -r 'heads(::@ & bookmarks())' -T 'commit_id.short()')" ]; then
+    echo "Working copy is orphaned, moving to trunk."
+    jj new 'trunk()'
+fi
+''',
+]
 
 [user]
 name = "Timothy Willard"
