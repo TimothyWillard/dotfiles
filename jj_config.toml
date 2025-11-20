@@ -53,6 +53,10 @@ if [ -z "$(jj log --ignore-working-copy --no-graph -r 'heads(::@ & bookmarks())'
 fi
 ''',
 ]
+t = [
+    "new",
+    "trunk()",
+]
 
 [user]
 name = "Timothy Willard"
