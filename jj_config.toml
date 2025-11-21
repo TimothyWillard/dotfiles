@@ -57,6 +57,10 @@ t = [
     "new",
     "trunk()",
 ]
+pu = [
+    "git",
+    "push",
+]
 
 [user]
 name = "Timothy Willard"
