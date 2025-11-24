@@ -61,6 +61,65 @@ pu = [
     "git",
     "push",
 ]
+pub = [
+    "util",
+    "exec",
+    "--",
+    "sh",
+    "-euc",
+'''
+set -eu
+
+# Prefer the parent revision when the current one is empty (e.g., freshly created placeholder rev).
+publish_rev="@"
+if [ "$(jj log --ignore-working-copy --no-graph -r @ -T 'empty')" = "true" ]; then
+    publish_rev="@-"
+fi
+
+# Normalize a bookmark name (jj outputs trailing * for the working copy).
+strip_wc_suffix() {
+    echo "$1" | awk '{ sub(/\*$/, ""); print }'
+}
+
+# If the publish revision already has a bookmark, just push it.
+current_bookmark_raw="$(jj log --ignore-working-copy --no-graph -r "$publish_rev & bookmarks()" -T 'bookmarks.join("\n")' | awk 'NF{print; exit}')"
+current_bookmark="$(strip_wc_suffix "$current_bookmark_raw")"
+if [ -n "$current_bookmark" ]; then
+    jj git push
+    exit 0
+fi
+
+# Find the nearest ancestor bookmark by increasing depth.
+nearest_bookmark=""
+nearest_rev=""
+depth=0
+while [ $depth -lt 1000 ]; do
+    revset="ancestors($publish_rev, $depth) & bookmarks()"
+    bookmarks_at_depth="$(jj log --ignore-working-copy --no-graph -r "$revset" -T 'bookmarks.join("\n")' | awk 'NF')"
+    if [ -n "$bookmarks_at_depth" ]; then
+        nearest_bookmark="$(printf "%s\n" "$bookmarks_at_depth" | head -n1)"
+        nearest_rev="$(jj log --ignore-working-copy --no-graph -r "$revset" -T 'commit_id' | head -n1)"
+        break
+    fi
+    depth=$((depth + 1))
+done
+
+if [ -z "$nearest_bookmark" ] || [ -z "$nearest_rev" ]; then
+    echo "No ancestor bookmark found near @." >&2
+    exit 1
+fi
+
+trunk_rev="$(jj log --ignore-working-copy --no-graph -r 'trunk()' -T 'commit_id' | head -n1)"
+nearest_bookmark_clean="$(strip_wc_suffix "$nearest_bookmark")"
+
+if [ "$nearest_rev" = "$trunk_rev" ]; then
+    jj git push --change "$publish_rev"
+else
+    jj bookmark set --revision "$publish_rev" "$nearest_bookmark_clean"
+    jj git push
+fi
+''',
+]
 
 [user]
 name = "Timothy Willard"
