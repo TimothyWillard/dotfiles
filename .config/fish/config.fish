@@ -26,18 +26,18 @@ end
 
 # User ~/.local/bin
 if test -d "$HOME/.local/bin"
-    fish_add_path ~/.local/bin
+    fish_add_path --append "$HOME/.local/bin"
 end
 
 # Bun JS
 if test -d "$HOME/.bun"
     set --export BUN_INSTALL "$HOME/.bun"
-    set --export PATH $BUN_INSTALL/bin $PATH
+    fish_add_path --append "$HOME/.bun/bin"
 end
 
 # RVM
 if test -d "$HOME/.rvm"
-    fish_add_path $HOME/.rvm/bin
+    fish_add_path --append "$HOME/.rvm/bin"
 end
 
 # Disable venv prompt
