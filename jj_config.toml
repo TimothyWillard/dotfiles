@@ -7,8 +7,21 @@ head = [
     "ancestors(@, 5) | @::",
 ]
 n = [
-    "edit",
-    "@+",
+    "util",
+    "exec",
+    "--",
+    "sh",
+    "-euc",
+'''
+set -eu
+
+next_rev="$(jj log --ignore-working-copy --no-graph -r '@+' -T 'commit_id' | head -n1)"
+if [ -z "$next_rev" ]; then
+    exec jj new
+else
+    exec jj edit @+
+fi
+''',
 ]
 p = [
     "edit",
