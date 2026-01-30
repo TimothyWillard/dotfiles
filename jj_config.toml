@@ -133,6 +133,7 @@ else
 fi
 ''',
 ]
+dnp = ["diff", "--no-pager", "~glob:**/*.lock & ~glob:**/*.ipynb"]
 
 [user]
 name = "Timothy Willard"
