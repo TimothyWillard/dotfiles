@@ -98,7 +98,16 @@ strip_wc_suffix() {
 current_bookmark_raw="$(jj log --ignore-working-copy --no-graph -r "$publish_rev & bookmarks()" -T 'bookmarks.join("\n")' | awk 'NF{print; exit}')"
 current_bookmark="$(strip_wc_suffix "$current_bookmark_raw")"
 if [ -n "$current_bookmark" ]; then
-    jj git push
+    # Check if the bookmark exists on origin remote
+    bookmark_on_origin="$(jj bookmark list --all-remotes -T 'if(name == "'"$current_bookmark"'" && remote == "origin", "found\n", "")')"
+    if [ -z "$bookmark_on_origin" ]; then
+        # Bookmark doesn't exist on origin, need to track and push it
+        jj bookmark track "$current_bookmark" --remote=origin
+        jj git push --bookmark "$current_bookmark"
+    else
+        # Bookmark exists on origin, regular push is fine
+        jj git push
+    fi
     exit 0
 fi
 
