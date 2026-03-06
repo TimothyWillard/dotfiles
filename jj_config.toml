@@ -142,7 +142,17 @@ else
 fi
 ''',
 ]
-dnp = ["diff", "--no-pager", "~glob:**/*.lock & ~glob:**/*.ipynb"]
+dnp = [
+    "diff",
+    "--no-pager",
+    "~glob:**/*.lock & ~glob:**/*.ipynb"
+]
+sq = [
+    "squash"
+]
+v = [
+    "version",
+]
 
 [user]
 name = "Timothy Willard"
