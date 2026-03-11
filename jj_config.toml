@@ -153,6 +153,13 @@ sq = [
 v = [
     "version",
 ]
+changes = [
+    "diff",
+    "--from",
+    "main",
+    "--to",
+    "@",
+]
 
 [user]
 name = "Timothy Willard"
