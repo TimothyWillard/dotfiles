@@ -98,6 +98,10 @@
         92,
         132
     ],
+    "files.associations": {
+        "justfile": "makefile",
+        "*.just": "makefile"
+    },
     "files.exclude": {
         "**/.jj/": true
     },
