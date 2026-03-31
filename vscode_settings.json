@@ -93,6 +93,7 @@
         "variolation",
         "zombied"
     ],
+    "editor.fontFamily": "Noto Sans Mono, Menlo, Monaco, 'Courier New', monospace",
     "editor.rulers": [
         88,
         92,
