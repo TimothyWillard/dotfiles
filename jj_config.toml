@@ -160,6 +160,22 @@ changes = [
     "--to",
     "@",
 ]
+cs = [
+    "codespell",
+]
+codespell = [
+    "util",
+    "exec",
+    "--",
+    "bash",
+    "-euo",
+    "pipefail",
+    "-c",
+'''
+script_dir="$(dirname "$(jj config path --user)")"
+exec "$script_dir/codespell-description.sh"
+''',
+]
 
 [user]
 name = "Timothy Willard"
