@@ -16,6 +16,8 @@ function syncfromdotfiles --description "Sync files from GitHub dotfiles"
 		echo "> Syncing jj config"
 		set jjconfigpath (jj config path --user)
 		rsyncsansgit $DOTFILES/jj_config.toml $jjconfigpath
+		set jjconfigdir (dirname $jjconfigpath)
+		rsyncsansgit $DOTFILES/.config/jj/ $jjconfigdir/
 		jj util completion fish > ~/.config/fish/completions/jj.fish
 	end
 	echo "> Syncing git config"
