@@ -6,23 +6,6 @@ head = [
     "--revisions",
     "ancestors(@, 5) | @::",
 ]
-n = [
-    "util",
-    "exec",
-    "--",
-    "sh",
-    "-euc",
-'''
-set -eu
-
-next_rev="$(jj log --ignore-working-copy --no-graph -r '@+' -T 'commit_id' | head -n1)"
-if [ -z "$next_rev" ]; then
-    exec jj new
-else
-    exec jj edit @+
-fi
-''',
-]
 p = [
     "edit",
     "@-",
@@ -48,100 +31,6 @@ d = [
     "--template",
     "description",
 ]
-gf = [
-    "git",
-    "fetch",
-]
-sync = [
-    "util",
-    "exec",
-    "--",
-    "sh",
-    "-c",
-'''
-jj git fetch
-if [ -z "$(jj log --ignore-working-copy --no-graph -r 'heads(::@ & bookmarks())' -T 'commit_id.short()')" ]; then
-    echo "Working copy is orphaned, moving to trunk."
-    jj new 'trunk()'
-fi
-''',
-]
-t = [
-    "new",
-    "trunk()",
-]
-pu = [
-    "git",
-    "push",
-]
-pub = [
-    "util",
-    "exec",
-    "--",
-    "sh",
-    "-euc",
-'''
-set -eu
-
-# Prefer the parent revision when the current one is empty (e.g., freshly created placeholder rev).
-publish_rev="@"
-if [ "$(jj log --ignore-working-copy --no-graph -r @ -T 'empty')" = "true" ]; then
-    publish_rev="@-"
-fi
-
-# Normalize a bookmark name (jj outputs trailing * for the working copy).
-strip_wc_suffix() {
-    echo "$1" | awk '{ sub(/\*$/, ""); print }'
-}
-
-# If the publish revision already has a bookmark, just push it.
-current_bookmark_raw="$(jj log --ignore-working-copy --no-graph -r "$publish_rev & bookmarks()" -T 'bookmarks.join("\n")' | awk 'NF{print; exit}')"
-current_bookmark="$(strip_wc_suffix "$current_bookmark_raw")"
-if [ -n "$current_bookmark" ]; then
-    # Check if the bookmark exists on origin remote
-    bookmark_on_origin="$(jj bookmark list --all-remotes -T 'if(name == "'"$current_bookmark"'" && remote == "origin", "found\n", "")')"
-    if [ -z "$bookmark_on_origin" ]; then
-        # Bookmark doesn't exist on origin, need to track and push it
-        jj bookmark track "$current_bookmark" --remote=origin
-        jj git push --bookmark "$current_bookmark"
-    else
-        # Bookmark exists on origin, regular push is fine
-        jj git push
-    fi
-    exit 0
-fi
-
-# Find the nearest ancestor bookmark by increasing depth.
-nearest_bookmark=""
-nearest_rev=""
-depth=0
-while [ $depth -lt 1000 ]; do
-    revset="ancestors($publish_rev, $depth) & bookmarks()"
-    bookmarks_at_depth="$(jj log --ignore-working-copy --no-graph -r "$revset" -T 'bookmarks.join("\n")' | awk 'NF')"
-    if [ -n "$bookmarks_at_depth" ]; then
-        nearest_bookmark="$(printf "%s\n" "$bookmarks_at_depth" | head -n1)"
-        nearest_rev="$(jj log --ignore-working-copy --no-graph -r "$revset" -T 'commit_id' | head -n1)"
-        break
-    fi
-    depth=$((depth + 1))
-done
-
-if [ -z "$nearest_bookmark" ] || [ -z "$nearest_rev" ]; then
-    echo "No ancestor bookmark found near @." >&2
-    exit 1
-fi
-
-trunk_rev="$(jj log --ignore-working-copy --no-graph -r 'trunk()' -T 'commit_id' | head -n1)"
-nearest_bookmark_clean="$(strip_wc_suffix "$nearest_bookmark")"
-
-if [ "$nearest_rev" = "$trunk_rev" ]; then
-    jj git push --change "$publish_rev"
-else
-    jj bookmark set --revision "$publish_rev" "$nearest_bookmark_clean"
-    jj git push
-fi
-''',
-]
 dnp = [
     "diff",
     "--no-pager",
@@ -161,8 +50,37 @@ changes = [
     "@",
 ]
 
+# Data for the fish prompt (see `_prompt_jj` in .config/fish/functions).
+# One tab-separated row per revision: the working copy plus the nearest
+# bookmark behind and ahead of it, so the prompt needs a single jj call.
+# Columns: role, empty, conflict, description, change id, commit id, bookmarks
+# (a trailing `*` on a bookmark means it differs from its remote). Fields are
+# joined with explicit `\t`, not `separate()`, which would drop empty ones.
+prompt = [
+    "log",
+    "--no-graph",
+    "--color=never",
+    "--revisions",
+    "@ | heads(::@ & bookmarks()) | heads(@:: & bookmarks())",
+    "--template",
+    "prompt_row",
+]
+
+[template-aliases]
+prompt_row = '''
+if(self.contained_in("@"), "cur",
+    if(self.contained_in("heads(@:: & bookmarks())"), "ahead", "behind"))
+++ "\t" ++ empty
+++ "\t" ++ conflict
+++ "\t" ++ description.first_line()
+++ "\t" ++ change_id.shortest()
+++ "\t" ++ commit_id.shortest()
+++ "\t" ++ local_bookmarks.map(|b| b.name() ++ if(b.synced(), "", "*")).join(" ")
+++ "\n"
+'''
+
 [user]
-name = "Timothy Willard"
+name ="Timothy Willard"
 email = "9395586+TimothyWillard@users.noreply.github.com"
 
 [ui]
