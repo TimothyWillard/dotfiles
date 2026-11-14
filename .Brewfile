@@ -1,4 +1,6 @@
+brew "codespell"
 brew "gh"
+brew "gnu-sed"
 brew "jj"
 brew "jq"
 brew "just"
