@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+#
+# Install dotfiles from this repository into $HOME.
+#
+# Files are located relative to this script, not the current working
+# directory, so it can be run from anywhere.
+
+set -euo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [-v] [-h]
+
+Install dotfiles from this repository into \$HOME.
+
+Options:
+  -v    Verbose output
+  -h    Show this help message
+EOF
+}
+
+VERBOSE=0
+
+while getopts ":vh" opt; do
+    case "$opt" in
+        v) VERBOSE=1 ;;
+        h) usage; exit 0 ;;
+        \?) echo "Unknown option: -$OPTARG" >&2; usage >&2; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+log() {
+    if [[ "$VERBOSE" -eq 1 ]]; then
+        echo "$@"
+    fi
+}
+
+# Absolute path of the directory containing this script, resolving symlinks
+# to the script itself so the repo is found even if it's invoked via a link.
+resolve_script_dir() {
+    local source="${BASH_SOURCE[0]}"
+    local dir
+    while [[ -L "$source" ]]; do
+        dir="$(cd -P "$(dirname "$source")" && pwd)"
+        source="$(readlink "$source")"
+        [[ "$source" != /* ]] && source="$dir/$source"
+    done
+    cd -P "$(dirname "$source")" && pwd
+}
+
+SCRIPT_DIR="$(resolve_script_dir)"
+
+# Copy a file from the repo to the same relative path under $HOME.
+# Usage: install_file <path relative to repo root>
+install_file() {
+    local rel="$1"
+    local src="$SCRIPT_DIR/$rel"
+    local dest="$HOME/$rel"
+
+    if [[ ! -f "$src" ]]; then
+        echo "Error: source file not found: $src" >&2
+        return 1
+    fi
+
+    log "Installing $src -> $dest"
+    mkdir -p "$(dirname "$dest")"
+    cp -f "$src" "$dest"
+}
+
+# Replace a directory under $HOME with the repo's copy, wholesale: files that
+# no longer exist in the repo are removed from the destination too.
+# The new copy is staged next to the destination first, so if the copy fails
+# the existing directory is left untouched.
+# Usage: install_directory <path relative to repo root>
+install_directory() {
+    local rel="${1%/}"
+    local src="$SCRIPT_DIR/$rel"
+    local dest="$HOME/$rel"
+    local stage="$dest.bootstrap-new.$$"
+    local old="$dest.bootstrap-old.$$"
+
+    if [[ ! -d "$src" ]]; then
+        echo "Error: source directory not found: $src" >&2
+        return 1
+    fi
+
+    log "Installing directory $src -> $dest"
+    mkdir -p "$(dirname "$dest")"
+
+    rm -rf "$stage"
+    mkdir "$stage"
+    if ! cp -R "$src/." "$stage/"; then
+        rm -rf "$stage"
+        echo "Error: failed to copy $src" >&2
+        return 1
+    fi
+
+    if [[ -e "$dest" ]]; then
+        mv "$dest" "$old"
+    fi
+    if ! mv "$stage" "$dest"; then
+        # Put the original back rather than leaving nothing installed.
+        [[ -e "$old" ]] && mv "$old" "$dest"
+        rm -rf "$stage"
+        echo "Error: failed to install $dest" >&2
+        return 1
+    fi
+    rm -rf "$old"
+}
+
+log "Script directory: $SCRIPT_DIR"
+log "Target directory: $HOME"
+
+install_file ".gitconfig"
+install_file ".vimrc"
+install_file ".Brewfile"
+install_file ".config/fish/config.fish"
+install_directory ".config/fish/functions"
+install_file ".config/jj/config.toml"
+install_file "Library/Application Support/Code/User/settings.json"
+
+log "Done."
