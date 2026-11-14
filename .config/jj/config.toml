@@ -50,6 +50,34 @@ changes = [
     "@",
 ]
 
+# Light-touch spell check of commit descriptions: `jj spell [REVSET]`
+# (default: everything between trunk and the working copy). Prints one line per
+# commit that has suspected typos and nothing for clean ones; it always exits 0
+# so it can sit in a chain without blocking anything. Needs `codespell`.
+spell = [
+    "util",
+    "exec",
+    "--",
+    "bash",
+    "-uc",
+'''
+command -v codespell >/dev/null 2>&1 || { echo "codespell not installed" >&2; exit 0; }
+revset="${1:-trunk()..@}"
+while IFS= read -r -d $'\x1e' record; do
+    change="${record%%$'\x1f'*}"
+    description="${record#*$'\x1f'}"
+    typos="$(printf '%s\n' "$description" | codespell --stdin-single-line - 2>/dev/null \
+        | sed 's/^[0-9]*: //' | paste -sd ';' - | sed 's/;/; /g')"
+    if [ -n "$typos" ]; then
+        printf '%s  %s\n    %s\n' "$change" "${description%%$'\n'*}" "$typos"
+    fi
+done < <(jj log --ignore-working-copy --no-graph -r "$revset" \
+    -T 'change_id.shortest(8) ++ "\x1f" ++ description ++ "\x1e"')
+exit 0
+''',
+    "jj-spell",
+]
+
 # Data for the fish prompt (see `_prompt_jj` in .config/fish/functions).
 # One tab-separated row per revision: the working copy plus the nearest
 # bookmark behind and ahead of it, so the prompt needs a single jj call.
