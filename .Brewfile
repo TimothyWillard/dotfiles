@@ -1,3 +1,4 @@
+brew "gh"
 brew "jj"
 brew "jq"
 brew "just"
