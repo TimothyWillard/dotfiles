@@ -109,6 +109,25 @@ install_directory() {
     rm -rf "$old"
 }
 
+# Download a URL to an absolute path.
+# The download is staged in a temporary file first, so if it fails the existing
+# file at the destination is left untouched.
+# Usage: download_file <url> <absolute destination path>
+download_file() {
+    local url="$1"
+    local dest="$2"
+    local tmp="$dest.bootstrap-new.$$"
+
+    log "Downloading $url -> $dest"
+    mkdir -p "$(dirname "$dest")"
+    if ! curl --fail --silent --show-error --location --output "$tmp" "$url"; then
+        rm -f "$tmp"
+        echo "Error: failed to download $url" >&2
+        return 1
+    fi
+    mv -f "$tmp" "$dest"
+}
+
 log "Script directory: $SCRIPT_DIR"
 log "Target directory: $HOME"
 
@@ -119,5 +138,17 @@ install_file ".config/fish/config.fish"
 install_directory ".config/fish/functions"
 install_file ".config/jj/config.toml"
 install_file "Library/Application Support/Code/User/settings.json"
+
+# Fetch the macOS gitignore fresh (it is intentionally not stored in this repo)
+# and place it at git's global ignore file: core.excludesfile if configured,
+# otherwise git's default of $XDG_CONFIG_HOME/git/ignore. This runs after the
+# .gitconfig install above so any setting there is respected.
+if command -v git >/dev/null 2>&1; then
+    global_ignore="$(git config --global --path --get core.excludesfile || true)"
+    global_ignore="${global_ignore:-${XDG_CONFIG_HOME:-$HOME/.config}/git/ignore}"
+    download_file "https://www.toptal.com/developers/gitignore/api/macos" "$global_ignore"
+else
+    echo "Warning: git not found; skipping global gitignore download" >&2
+fi
 
 log "Done."
